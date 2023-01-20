@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "multicount",
+  "version": "${version}",
+
+  "name": "Multicount",
+  "description": "the equivalent of having alt accounts, but without paying",
+  "authors": [
+    "DialingSpoon"
+  ],
+  "contact": {
+  },
+
+  "license": "MIT",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.dialingspoon.multicount.Multicount"
+    ]
+  },
+  "mixins": [
+    "multicount.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.9",
+    "fabric": "*",
+    "minecraft": "~1.19",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
