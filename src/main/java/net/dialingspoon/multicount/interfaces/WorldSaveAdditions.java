@@ -1,9 +1,7 @@
 package net.dialingspoon.multicount.interfaces;
 
-import java.util.ArrayList;
-
 public interface WorldSaveAdditions {
-    void setAccount(byte current, byte to);
+    void setAccount(int current, int to);
 
-    byte getAccount(boolean b);
+    int getAccount(boolean is_new);
 }

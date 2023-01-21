@@ -5,8 +5,6 @@ import net.dialingspoon.multicount.interfaces.PlayerManagerAdditions;
 import net.dialingspoon.multicount.interfaces.StatHandlerAdditions;
 import net.dialingspoon.multicount.interfaces.WorldSaveAdditions;
 import net.minecraft.advancement.PlayerAdvancementTracker;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.ServerStatHandler;
@@ -23,8 +21,6 @@ import java.util.*;
 @Mixin(PlayerManager.class)
 public abstract class PlayerManagerMixin implements PlayerManagerAdditions {
 	@Shadow
-	private @Final MinecraftServer server;
-	@Shadow
 	private @Final Map<UUID, ServerStatHandler> statisticsMap;
 	@Shadow
 	private @Final Map<UUID, PlayerAdvancementTracker> advancementTrackers;
@@ -32,21 +28,22 @@ public abstract class PlayerManagerMixin implements PlayerManagerAdditions {
 	private @Final WorldSaveHandler saveHandler;
 	@Override
 	public WorldSaveHandler getSaveHandler(){return saveHandler;}
+
+	//edit the playerdata on save
 	@Inject
 			(method = "savePlayerData", at = @At("TAIL"))
-	private void savePlayerData(ServerPlayerEntity player, CallbackInfo info) {
-		if(((WorldSaveAdditions)this.saveHandler).getAccount(true) != -1) {
+	private void changePlayerData(ServerPlayerEntity player, CallbackInfo info) {
+		int old_data = ((WorldSaveAdditions)this.saveHandler).getAccount(false);
+		int new_data = ((WorldSaveAdditions)this.saveHandler).getAccount(true);
 
-			ServerStatHandler serverStatHandler2 = (ServerStatHandler) this.statisticsMap.get(player.getUuid());
-			if (serverStatHandler2 != null) {
-				((StatHandlerAdditions)serverStatHandler2).saveSecond(((WorldSaveAdditions)this.saveHandler).getAccount(true),((WorldSaveAdditions)this.saveHandler).getAccount(false));
-			}
+		if(new_data != -1) {
+			ServerStatHandler serverStatHandler2 = this.statisticsMap.get(player.getUuid());
+			((StatHandlerAdditions)serverStatHandler2).saveSecond(new_data, old_data);
 
-			PlayerAdvancementTracker playerAdvancementTracker2 = (PlayerAdvancementTracker) this.advancementTrackers.get(player.getUuid());
-			if (playerAdvancementTracker2 != null) {
-				((AdvancementAdditions)playerAdvancementTracker2).saveSecond(((WorldSaveAdditions)this.saveHandler).getAccount(true),((WorldSaveAdditions)this.saveHandler).getAccount(false));
-			}
-			((WorldSaveAdditions)this.saveHandler).setAccount((byte) -1, (byte) -1);
+			PlayerAdvancementTracker playerAdvancementTracker2 = this.advancementTrackers.get(player.getUuid());
+			((AdvancementAdditions)playerAdvancementTracker2).saveSecond(new_data, old_data);
+
+			((WorldSaveAdditions)this.saveHandler).setAccount(-1, -1);
 		}
 	}
 }

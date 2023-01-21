@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class PlayerMixin implements PlayerAdditions {
-    public int account = 1;
+    public int account = 0;
     @Override
     public void setAccount(int i) {account = i;}
     @Override
