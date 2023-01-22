@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Multicount",
-  "description": "the equivalent of having alt accounts, but without paying",
+  "description": "a server-side mod that allows players to create and switch between multiple saves",
   "authors": [
     "DialingSpoon"
   ],

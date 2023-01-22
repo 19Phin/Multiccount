@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import static com.mojang.brigadier.arguments.IntegerArgumentType.getInteger;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import net.dialingspoon.multicount.config.ModConfigs;
 import net.dialingspoon.multicount.interfaces.PlayerAdditions;
 import net.dialingspoon.multicount.interfaces.PlayerManagerAdditions;
 import net.dialingspoon.multicount.interfaces.WorldSaveAdditions;
@@ -16,7 +17,7 @@ import net.minecraft.text.Text;
 
 public class AccountCommand {
     public static void register(CommandDispatcher<ServerCommandSource> serverCommandSourceCommandDispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
-        serverCommandSourceCommandDispatcher.register(CommandManager.literal("account").then(CommandManager.argument("account number", IntegerArgumentType.integer(1,3)).executes(ctx -> run(ctx.getSource(), getInteger(ctx, "account number")))));
+        serverCommandSourceCommandDispatcher.register(CommandManager.literal("account").then(CommandManager.argument("account number", IntegerArgumentType.integer(1, ModConfigs.accountnum)).executes(ctx -> run(ctx.getSource(), getInteger(ctx, "account number")))));
     }
 
     private static int run(ServerCommandSource source, int i) throws CommandSyntaxException{
