@@ -26,7 +26,7 @@ public abstract class AdvancementMixin implements AdvancementAdditions {
             }
             Util.backupAndReplace(advancementFile, file2, file1);
         }catch (Exception var2) {
-            Multicount.LOGGER.error("Couldn't Switch stats", var2);
+            Multicount.LOGGER.error("Couldn't switch player advancements in {" + advancementFile.toString() + "}", var2);
         }
     }
 }

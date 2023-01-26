@@ -25,7 +25,7 @@ public abstract class StatHandlerMixin implements StatHandlerAdditions {
             }
             Util.backupAndReplace(file, file2, file1);
         }catch (Exception var2) {
-            Multicount.LOGGER.error("Couldn't Switch stats", var2);
+            Multicount.LOGGER.error("Couldn't switch player stats in {" + file.toString() + "}", var2);
         }
     }
 }
