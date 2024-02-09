@@ -1,14 +1,11 @@
 package net.dialingspoon.multicount.mixin;
 
-import net.dialingspoon.multicount.interfaces.AdvancementAdditions;
-import net.dialingspoon.multicount.interfaces.PlayerManagerAdditions;
-import net.dialingspoon.multicount.interfaces.StatHandlerAdditions;
-import net.dialingspoon.multicount.interfaces.WorldSaveAdditions;
-import net.minecraft.advancement.PlayerAdvancementTracker;
+import net.dialingspoon.multicount.Multicount;
+import net.dialingspoon.multicount.server.interfaces.PlayerManagerAdditions;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.stat.ServerStatHandler;
-import net.minecraft.world.WorldSaveHandler;
+import net.minecraft.util.WorldSavePath;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,34 +13,61 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 @Mixin(PlayerManager.class)
 public abstract class PlayerManagerMixin implements PlayerManagerAdditions {
-	@Shadow
-	private @Final Map<UUID, ServerStatHandler> statisticsMap;
-	@Shadow
-	private @Final Map<UUID, PlayerAdvancementTracker> advancementTrackers;
-	@Shadow
-	private @Final WorldSaveHandler saveHandler;
+
+	@Shadow @Final private MinecraftServer server;
+	int oldAccount = 0;
+	int newAccount = 0;
+
 	@Override
-	public WorldSaveHandler getSaveHandler(){return saveHandler;}
+	public void setAccount(int current, int to) {
+		oldAccount = current;
+		newAccount = to;
+	}
 
-	//edit the playerdata on save
-	@Inject
-			(method = "savePlayerData", at = @At("TAIL"))
+	@Inject(method = "savePlayerData", at = @At("TAIL"))
 	private void changePlayerData(ServerPlayerEntity player, CallbackInfo info) {
-		int old_data = ((WorldSaveAdditions)this.saveHandler).getAccount(false);
-		int new_data = ((WorldSaveAdditions)this.saveHandler).getAccount(true);
+		// Check if the new account is specified
+		if (newAccount != 0) {
+			Multicount.accountStates.setValue(player.getUuid(), newAccount);
+			// Rotate accounts
+			File playerData = new File(server.getSavePath(WorldSavePath.PLAYERDATA).toFile(), player.getUuidAsString() + ".dat");
+			rotateAccounts(playerData);
+			File advancements = new File(server.getSavePath(WorldSavePath.ADVANCEMENTS).toFile(), player.getUuidAsString() + ".json");
+			rotateAccounts(advancements);
+			File stats = new File(server.getSavePath(WorldSavePath.STATS).toFile(), player.getUuidAsString() + ".json");
+			rotateAccounts(stats);
+			// Reset values for next use
+			newAccount = 0;
+			oldAccount = 0;
+		}
+	}
 
-		if(new_data != -1) {
-			ServerStatHandler serverStatHandler2 = this.statisticsMap.get(player.getUuid());
-			((StatHandlerAdditions)serverStatHandler2).saveSecond(new_data, old_data);
+	private void rotateAccounts(File file){
 
-			PlayerAdvancementTracker playerAdvancementTracker2 = this.advancementTrackers.get(player.getUuid());
-			((AdvancementAdditions)playerAdvancementTracker2).saveSecond(new_data, old_data);
+		try {
+			File oldAccountFile = new File(file.getPath() + this.oldAccount);
+			File newAccountFile = new File(file.getPath() + this.newAccount);
 
-			((WorldSaveAdditions)this.saveHandler).setAccount(-1, -1);
+			// Copy the current file to the old account file
+			Files.copy(file.toPath(), oldAccountFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+			// Check if new account file exists
+			if (newAccountFile.exists()) {
+				// Copy contents from new account file to the original file
+				Files.copy(newAccountFile.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			} else {
+				// If new account file doesn't exist, make the original file also not exist
+				Files.deleteIfExists(file.toPath());
+			}
+		} catch (IOException e) {
+			Multicount.LOGGER.error("Couldn't switch player data in {" + file.getPath() + "}", e);
 		}
 	}
 }

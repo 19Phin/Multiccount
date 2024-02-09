@@ -4,11 +4,16 @@
   "package": "net.dialingspoon.multicount.mixin",
   "compatibilityLevel": "JAVA_17",
   "server": [
-    "WorldSaveMixin",
-    "PlayerManagerMixin",
-    "AdvancementMixin",
-    "StatHandlerMixin",
     "PlayerMixin"
+  ],
+  "mixins": [
+    "PlayerManagerMixin"
+  ],
+  "client": [
+    "TitleScreenMixin",
+    "ClientPlayerMixin",
+    "LevelStorageMixin",
+    "IntegratedServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

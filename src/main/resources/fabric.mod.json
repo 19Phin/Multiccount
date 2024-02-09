@@ -9,6 +9,7 @@
     "DialingSpoon"
   ],
   "contact": {
+    "sources": "https://github.com/19Phin/Multiccount"
   },
 
   "license": "MIT",
@@ -16,8 +17,14 @@
 
   "environment": "*",
   "entrypoints": {
+    "server": [
+      "net.dialingspoon.multicount.server.MulticountServer"
+    ],
     "main": [
       "net.dialingspoon.multicount.Multicount"
+    ],
+    "client": [
+      "net.dialingspoon.multicount.MulticountClient"
     ]
   },
   "mixins": [
@@ -26,7 +33,7 @@
 
   "depends": {
     "fabricloader": ">=0.14.9",
-    "minecraft": "~1.19",
+    "minecraft": "1.19.3",
     "java": ">=17"
   },
   "suggests": {
