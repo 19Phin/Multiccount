@@ -10,12 +10,14 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class PlayerMixin extends PlayerEntity implements PlayerAdditions {
+    @Unique
     public int account;
 
     public PlayerMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
@@ -25,7 +27,7 @@ public abstract class PlayerMixin extends PlayerEntity implements PlayerAddition
     @Override
     public int getAccount(){
         return account;
-    };
+    }
 
     // On init set account from persistent state
     @Inject(method = "<init>", at = @At("TAIL"))

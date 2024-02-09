@@ -3,7 +3,6 @@ package net.dialingspoon.multicount.server.command;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.dialingspoon.multicount.server.MulticountServer;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.GameProfileArgumentType;
@@ -38,7 +37,7 @@ public class MaxAccountCommand {
         );
     }
 
-    private static int execute(ServerCommandSource source, int maxCount, @Nullable Collection<GameProfile> targets) throws CommandSyntaxException{
+    private static int execute(ServerCommandSource source, int maxCount, @Nullable Collection<GameProfile> targets){
         Map<String, String> map = new HashMap<>();
         Text text;
         // If player is specfied

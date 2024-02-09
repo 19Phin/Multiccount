@@ -32,18 +32,16 @@ public abstract class TitleScreenMixin extends Screen {
         addDrawableChild(new TexturedButtonWidget(this.width / 2 - 117, l + 12, 11, 8, 82, 20, 32, ARROWS, 256, 256, (button) -> {
             if (MulticountClient.accountHandler.account > 1) MulticountClient.accountHandler.account --;
         }, Text.literal("account down")));
-        addDrawableChild(new TexturedButtonWidget(this.width / 2 - 117, l-12, 11, 8, 114, 4, 32, ARROWS, 256, 256, (button) -> {
-            MulticountClient.accountHandler.account ++;
-        }, Text.literal("account up")));
+        addDrawableChild(new TexturedButtonWidget(this.width / 2 - 117, l-12, 11, 8, 114, 4, 32, ARROWS, 256, 256, (button) -> MulticountClient.accountHandler.account ++, Text.literal("account up")));
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/TitleScreen;drawStringWithShadow(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)V"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void renderNum(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci, float f, int i, int j, int k, float g, int l) {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/TitleScreen;drawTextWithShadow(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)V"), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void renderNum(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci, float f, float g, int i, String string) {
         // Add account number to title screen
         String accountString = String.valueOf(MulticountClient.accountHandler.account);
         int textWidth = this.textRenderer.getWidth(accountString); // Calculate the width of the text
         int xPos = (this.width - textWidth) / 2; // Calculate the x-position to center the text
-        drawStringWithShadow(matrices, this.textRenderer, accountString, xPos - 111, this.height / 4 + 78, 16777215 | l);
+        drawTextWithShadow(matrices, this.textRenderer, accountString, xPos - 111, this.height / 4 + 78, 16777215 |  i);
     }
 
 }

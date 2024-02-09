@@ -26,7 +26,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
     }
 
     @Inject(method = "openToLan", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;setClientPermissionLevel(I)V"))
-    public void registerCommand(GameMode gameMode, boolean cheatsAllowed, int port, CallbackInfoReturnable<Boolean> cir) throws IOException {
+    public void registerCommand(GameMode gameMode, boolean cheatsAllowed, int port, CallbackInfoReturnable<Boolean> cir) {
         // Register the command
         this.getCommandManager().getDispatcher().register(LanAccountCommand.register(this.getCommandManager().getDispatcher()));
     }

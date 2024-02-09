@@ -9,6 +9,7 @@ import net.minecraft.util.WorldSavePath;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -22,7 +23,9 @@ import java.nio.file.StandardCopyOption;
 public abstract class PlayerManagerMixin implements PlayerManagerAdditions {
 
 	@Shadow @Final private MinecraftServer server;
+	@Unique
 	int oldAccount = 0;
+	@Unique
 	int newAccount = 0;
 
 	@Override
@@ -49,6 +52,7 @@ public abstract class PlayerManagerMixin implements PlayerManagerAdditions {
 		}
 	}
 
+	@Unique
 	private void rotateAccounts(File file){
 
 		try {
