@@ -41,7 +41,7 @@ public class LanAccountCommand {
             }
         } else {
             Text text = Text.literal("Current account: " + ((PlayerAdditions) getplayer).getAccount());
-            (source).sendFeedback(text, false);
+            (source).sendFeedback(() -> text, false);
         }
         return 1;
     }

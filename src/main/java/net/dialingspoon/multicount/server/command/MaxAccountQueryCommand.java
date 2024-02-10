@@ -43,7 +43,7 @@ public class MaxAccountQueryCommand {
             accounts.deleteCharAt(accounts.length() - 1);
             text = Text.literal(accounts.toString());
         }
-        (source).sendFeedback(text, false);
+        (source).sendFeedback(() -> text, false);
         return 1;
     }
 }

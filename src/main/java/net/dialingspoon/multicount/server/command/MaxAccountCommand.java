@@ -68,7 +68,7 @@ public class MaxAccountCommand {
             text = Text.literal("Set the default max accounts to " + maxCount);
         }
         MulticountServer.configs.setMaxAccountNum(map);
-        (source).sendFeedback(text, true);
+        (source).sendFeedback(() -> text, true);
         return 1;
     }
 }

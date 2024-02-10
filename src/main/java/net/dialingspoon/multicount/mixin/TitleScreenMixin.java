@@ -1,10 +1,10 @@
 package net.dialingspoon.multicount.mixin;
 
 import net.dialingspoon.multicount.MulticountClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,13 +35,13 @@ public abstract class TitleScreenMixin extends Screen {
         addDrawableChild(new TexturedButtonWidget(this.width / 2 - 117, l-12, 11, 8, 114, 4, 32, ARROWS, 256, 256, (button) -> MulticountClient.accountHandler.account ++, Text.literal("account up")));
     }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/TitleScreen;drawTextWithShadow(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)V"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void renderNum(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci, float f, float g, int i, String string) {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)I"), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void renderNum(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, float f, float g, int i) {
         // Add account number to title screen
         String accountString = String.valueOf(MulticountClient.accountHandler.account);
         int textWidth = this.textRenderer.getWidth(accountString); // Calculate the width of the text
         int xPos = (this.width - textWidth) / 2; // Calculate the x-position to center the text
-        drawTextWithShadow(matrices, this.textRenderer, accountString, xPos - 111, this.height / 4 + 78, 16777215 |  i);
+        context.drawTextWithShadow(this.textRenderer, accountString, xPos - 111, this.height / 4 + 78, 16777215 |  i);
     }
 
 }
