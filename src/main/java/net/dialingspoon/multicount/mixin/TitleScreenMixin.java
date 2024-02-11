@@ -1,7 +1,9 @@
 package net.dialingspoon.multicount.mixin;
 
+import net.dialingspoon.multicount.Multicount;
 import net.dialingspoon.multicount.MulticountClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
@@ -21,7 +23,15 @@ public abstract class TitleScreenMixin extends Screen {
         super(title);
     }
     @Unique
-    Identifier ARROWS = new Identifier("textures/gui/resource_packs.png");
+    private static final ButtonTextures UP_BUTTON_TEXTURES = new ButtonTextures(
+        new Identifier(Multicount.MOD_ID, "widget/move_up"),
+            new Identifier(Multicount.MOD_ID, "widget/move_up_highlighted")
+    );
+    @Unique
+    private static final ButtonTextures DOWN_BUTTON_TEXTURES = new ButtonTextures(
+        new Identifier(Multicount.MOD_ID, "widget/move_down"),
+            new Identifier(Multicount.MOD_ID, "widget/move_down_highlighted")
+    );
 
 
     // On init set account from persistent state
@@ -29,10 +39,10 @@ public abstract class TitleScreenMixin extends Screen {
     private void Init(CallbackInfo ci) {
         // Add arrow buttons to title screen
         int l = this.height / 4 + 78;
-        addDrawableChild(new TexturedButtonWidget(this.width / 2 - 117, l + 12, 11, 8, 82, 20, 32, ARROWS, 256, 256, (button) -> {
+        this.addDrawableChild(new TexturedButtonWidget(this.width / 2 - 117, l + 12, 11, 7, DOWN_BUTTON_TEXTURES, (button) -> {
             if (MulticountClient.accountHandler.account > 1) MulticountClient.accountHandler.account --;
         }, Text.literal("account down")));
-        addDrawableChild(new TexturedButtonWidget(this.width / 2 - 117, l-12, 11, 8, 114, 4, 32, ARROWS, 256, 256, (button) -> MulticountClient.accountHandler.account ++, Text.literal("account up")));
+        this.addDrawableChild(new TexturedButtonWidget(this.width / 2 - 117, l-12, 11, 7, UP_BUTTON_TEXTURES, (button) -> MulticountClient.accountHandler.account ++, Text.literal("account up")));
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)I"), locals = LocalCapture.CAPTURE_FAILHARD)

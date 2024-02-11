@@ -16,7 +16,7 @@ public class Multicount implements ModInitializer {
 	public void onInitialize() {
 		// Initialize persistent state
 		ServerLifecycleEvents.SERVER_STARTED.register(server ->
-				accountStates = server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(AccountStates::fromNbt, AccountStates::new, Multicount.MOD_ID
+				accountStates = server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(AccountStates.getPersistentStateType(), Multicount.MOD_ID
 				));
 	}
 }

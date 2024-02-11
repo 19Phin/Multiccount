@@ -14,7 +14,7 @@ public class MulticountClient implements ClientModInitializer {
 	public void onInitializeClient() {
 
 		// Get the player's GameProfile
-		accountHandler.uuid = MinecraftClient.getInstance().getSession().getProfile().getId().toString();
+		accountHandler.uuid = MinecraftClient.getInstance().getSession().getUuidOrNull().toString();
 
 		// Copy account data to save file on world close
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
