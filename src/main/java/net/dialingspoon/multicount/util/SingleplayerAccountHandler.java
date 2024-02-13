@@ -3,6 +3,7 @@ package net.dialingspoon.multicount.util;
 import net.dialingspoon.multicount.Multicount;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.nbt.NbtTagSizeTracker;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WorldSavePath;
 
@@ -32,7 +33,7 @@ public class SingleplayerAccountHandler {
         NbtCompound playerData = null;
         try {
             if (playerDat.exists()) {
-                playerData = NbtIo.readCompressed(playerDat);
+                playerData = NbtIo.readCompressed(playerDat.toPath(), NbtTagSizeTracker.ofUnlimitedBytes());
             } else if (mainPlayerDat.exists()) {
                 mainPlayerDat.delete();
             }
