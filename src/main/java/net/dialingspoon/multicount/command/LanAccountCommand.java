@@ -35,7 +35,6 @@ public class LanAccountCommand {
                     // Kick to reload
                     ((PlayerManagerAdditions) source.getServer().getPlayerManager()).setAccount(((PlayerAdditions) getplayer).getAccount(), (i));
                     getplayer.networkHandler.disconnect(Text.literal("Switching accounts, please re-log."));
-                    return 1;
                 }
             } else {
                 throw new SimpleCommandExceptionType(Text.literal("Lan server source cannot use account command\nPlease log out and change on title screen")).create();
@@ -43,7 +42,7 @@ public class LanAccountCommand {
         } else {
             Text text = Text.literal("Current account: " + ((PlayerAdditions) getplayer).getAccount());
             (source).sendFeedback(text, false);
-            return 1;
         }
+        return 1;
     }
 }

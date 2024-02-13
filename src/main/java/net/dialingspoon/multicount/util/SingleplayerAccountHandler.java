@@ -11,14 +11,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
-import java.util.Map;
 
 public class SingleplayerAccountHandler {
 
     public int account = 1;
     public String uuid;
-    public Map<String,String> lanUuids = new HashMap<>();
 
     public NbtCompound getAccount(File worldFile) {
         // Copy account advancements to main

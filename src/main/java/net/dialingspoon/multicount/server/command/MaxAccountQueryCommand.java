@@ -2,7 +2,6 @@ package net.dialingspoon.multicount.server.command;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.dialingspoon.multicount.server.MulticountServer;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.GameProfileArgumentType;
@@ -27,7 +26,7 @@ public class MaxAccountQueryCommand {
         );
     }
 
-    private static int execute(ServerCommandSource source, @Nullable Collection<GameProfile> targets) throws CommandSyntaxException {
+    private static int execute(ServerCommandSource source, @Nullable Collection<GameProfile> targets){
         Text text;
         // If player is specfied
         if (targets == null) {

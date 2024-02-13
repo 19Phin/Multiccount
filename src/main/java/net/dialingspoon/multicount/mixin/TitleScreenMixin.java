@@ -32,9 +32,7 @@ public abstract class TitleScreenMixin extends Screen {
         addDrawableChild(new TexturedButtonWidget(this.width / 2 - 117, l + 12, 11, 8, 82, 20, 32, ARROWS, 256, 256, (button) -> {
             if (MulticountClient.accountHandler.account > 1) MulticountClient.accountHandler.account --;
         }, Text.literal("account down")));
-        addDrawableChild(new TexturedButtonWidget(this.width / 2 - 117, l-12, 11, 8, 114, 4, 32, ARROWS, 256, 256, (button) -> {
-            MulticountClient.accountHandler.account ++;
-        }, Text.literal("account up")));
+        addDrawableChild(new TexturedButtonWidget(this.width / 2 - 117, l-12, 11, 8, 114, 4, 32, ARROWS, 256, 256, (button) -> MulticountClient.accountHandler.account ++, Text.literal("account up")));
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/TitleScreen;drawStringWithShadow(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)V"), locals = LocalCapture.CAPTURE_FAILHARD)

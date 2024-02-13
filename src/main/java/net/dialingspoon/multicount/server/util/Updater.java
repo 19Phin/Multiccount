@@ -82,7 +82,7 @@ public class Updater {
         return (dotIndex > 0) ? fileName.substring(0, dotIndex) : fileName;
     }
 
-    private static int readAccountValueFromDat(File datFile) throws IOException {
+    private static int readAccountValueFromDat(File datFile){
         try {
             NbtCompound compoundTag = NbtIo.readCompressed(datFile);
             // Check if the "account" tag exists
