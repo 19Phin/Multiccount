@@ -1,6 +1,5 @@
 package net.dialingspoon.multicount.util;
 
-import net.minecraft.datafixer.DataFixTypes;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.PersistentState;
 
@@ -14,10 +13,6 @@ public class AccountStates extends PersistentState {
     // Create persistent state multicount.dat
     public AccountStates() {
         super();
-    }
-
-    public static Type<AccountStates> getPersistentStateType() {
-        return new Type<>(AccountStates::new, AccountStates::fromNbt, DataFixTypes.LEVEL);
     }
 
     public static AccountStates fromNbt(NbtCompound nbt) {
@@ -53,6 +48,9 @@ public class AccountStates extends PersistentState {
 
     public void setValue(UUID uuid, int value) {
         uuidToIntMap.put(uuid, value);
-        this.setDirty(true);
+    }
+    @Override
+    public boolean isDirty(){
+        return true;
     }
 }
