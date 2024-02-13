@@ -48,6 +48,9 @@ public class AccountStates extends PersistentState {
 
     public void setValue(UUID uuid, int value) {
         uuidToIntMap.put(uuid, value);
-        this.setDirty(true);
+    }
+    @Override
+    public boolean isDirty(){
+        return true;
     }
 }
