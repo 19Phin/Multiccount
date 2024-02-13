@@ -3,7 +3,7 @@ package net.dialingspoon.multicount.server.util;
 import net.dialingspoon.multicount.Multicount;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.nbt.NbtTagSizeTracker;
+import net.minecraft.nbt.NbtSizeTracker;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.WorldSavePath;
 
@@ -85,7 +85,7 @@ public class Updater {
 
     private static int readAccountValueFromDat(File datFile){
         try {
-            NbtCompound compoundTag = NbtIo.readCompressed(datFile.toPath(), NbtTagSizeTracker.ofUnlimitedBytes());
+            NbtCompound compoundTag = NbtIo.readCompressed(datFile.toPath(), NbtSizeTracker.ofUnlimitedBytes());
             // Check if the "account" tag exists
             if (compoundTag.contains("account")) {
                 return compoundTag.getInt("account");
