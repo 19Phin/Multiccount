@@ -52,6 +52,7 @@ public abstract class ClientPlayerMixin extends PlayerEntity implements PlayerAd
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     private void readCustomDataFromNbt(NbtCompound nbt,CallbackInfo info) {
         account = nbt.getInt("account");
+        // If no nbt, move to world spawn
         if (this.getPos().equals(new Vec3d(0, 0, 0))) {
             this.moveToSpawn(server.getOverworld());
         }
