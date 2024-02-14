@@ -3,7 +3,6 @@ package net.dialingspoon.multicount.server.command;
 import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import net.dialingspoon.multicount.server.MulticountServer;
-import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.GameProfileArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -13,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 public class MaxAccountQueryCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
+    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, boolean dedicated) {
         // /accountmax query <targets(optional)>
         dispatcher.register(CommandManager.literal("accountmax")
                 .requires(source -> source.hasPermissionLevel(3))
@@ -31,7 +30,7 @@ public class MaxAccountQueryCommand {
         // If player is specfied
         if (targets == null) {
             // Get default
-            text = Text.literal("The default account maximum is " + MulticountServer.configs.accountNum);
+            text = Text.of("The default account maximum is " + MulticountServer.configs.accountNum);
         } else {
             // Get each player's account
             StringBuilder accounts = new StringBuilder();
@@ -41,7 +40,7 @@ public class MaxAccountQueryCommand {
                 else accounts.append(target.getName() + " is allowed " + targetmax + " accounts\n");
             }
             accounts.deleteCharAt(accounts.length() - 1);
-            text = Text.literal(accounts.toString());
+            text = Text.of(accounts.toString());
         }
         (source).sendFeedback(text, false);
         return 1;

@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.dialingspoon.multicount.server.MulticountServer;
-import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.GameProfileArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -16,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MaxAccountCommand {
-    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
+    public static void register(CommandDispatcher<ServerCommandSource> dispatcher, boolean dedicated) {
         // /accountmax [maxCount] <targets(optional)>
         dispatcher.register(CommandManager.literal("accountmax")
                 .requires(source -> source.hasPermissionLevel(3))
@@ -47,7 +46,7 @@ public class MaxAccountCommand {
                 for (GameProfile target : targets) {
                     map.put(String.valueOf(target.getId()), "default");
                 }
-                text = Text.literal("Set " + targets.size() + " player's max accounts to default");
+                text = Text.of("Set " + targets.size() + " player's max accounts to default");
             } else {
                 // Else set to new value
                 String name = null;
@@ -56,16 +55,16 @@ public class MaxAccountCommand {
                     name = target.getName();
                 }
                 if (targets.size() == 1) {
-                    text = Text.literal("Set " + name + "'s max accounts to " + maxCount);
+                    text = Text.of("Set " + name + "'s max accounts to " + maxCount);
                 } else {
-                    text = Text.literal("Set " + targets.size() + " player's max accounts to " + maxCount);
+                    text = Text.of("Set " + targets.size() + " player's max accounts to " + maxCount);
                 }
             }
         } else {
             // If not, set default to value
             map.put("default_accounts", String.valueOf(maxCount));
             MulticountServer.configs.accountNum = maxCount;
-            text = Text.literal("Set the default max accounts to " + maxCount);
+            text = Text.of("Set the default max accounts to " + maxCount);
         }
         MulticountServer.configs.setMaxAccountNum(map);
         (source).sendFeedback(text, true);

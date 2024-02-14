@@ -6,7 +6,7 @@ import net.dialingspoon.multicount.server.command.MaxAccountQueryCommand;
 import net.dialingspoon.multicount.server.config.ModConfigs;
 import net.dialingspoon.multicount.server.util.Updater;
 import net.fabricmc.api.DedicatedServerModInitializer;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
 public class MulticountServer implements DedicatedServerModInitializer {

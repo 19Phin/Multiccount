@@ -14,7 +14,7 @@ import java.io.IOException;
 @Mixin(LevelStorage.class)
 public abstract class LevelStorageMixin {
 
-    @Redirect(method = "method_29582(Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/resource/DataPackSettings;Lcom/mojang/serialization/Lifecycle;Ljava/nio/file/Path;Lcom/mojang/datafixers/DataFixer;)Lnet/minecraft/world/level/LevelProperties;", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NbtIo;readCompressed(Ljava/io/File;)Lnet/minecraft/nbt/NbtCompound;"))
+    @Redirect(method = "method_29582(Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/resource/DataPackSettings;Lcom/mojang/serialization/Lifecycle;Ljava/io/File;Lcom/mojang/datafixers/DataFixer;)Lnet/minecraft/world/level/LevelProperties;", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NbtIo;readCompressed(Ljava/io/File;)Lnet/minecraft/nbt/NbtCompound;"))
     private static NbtCompound readModifiedCompressed(File file) throws IOException {
         // Replace player data in .dat with custom data
         NbtCompound fileNbt = NbtIo.readCompressed(file);
