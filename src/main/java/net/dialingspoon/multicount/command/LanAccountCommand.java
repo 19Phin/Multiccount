@@ -1,6 +1,5 @@
 package net.dialingspoon.multicount.command;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -33,7 +32,7 @@ public class LanAccountCommand {
                     throw new SimpleCommandExceptionType(Text.of("That is the current account!")).create();
                 } else {
                     // Kick to reload
-                    ((PlayerManagerAdditions) source.getServer().getPlayerManager()).setAccount(((PlayerAdditions) getplayer).getAccount(), (i));
+                    ((PlayerManagerAdditions) source.getMinecraftServer().getPlayerManager()).setAccount(((PlayerAdditions) getplayer).getAccount(), (i));
                     getplayer.networkHandler.disconnect(Text.of("Switching accounts, please re-log."));
                 }
             } else {
