@@ -1,6 +1,7 @@
 package net.dialingspoon.multicount.server.util;
 
 import net.dialingspoon.multicount.Multicount;
+import net.dialingspoon.multicount.MulticountClient;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.server.MinecraftServer;
@@ -31,15 +32,67 @@ public class Updater {
         boolean multicountDatNotExists = !new File(server.getSavePath(WorldSavePath.ROOT).toFile(), "data/multicount.dat").exists();
 
         // Update files to new format
-        if (oldFiles && multicountDatNotExists) {
-            Multicount.LOGGER.info("Updating data format");
+        if (multicountDatNotExists) {
             try {
-                renameFilesInDirectory(playerDataDirectory);
-                renameFilesInDirectory(advancementsDirectory);
-                renameFilesInDirectory(statsDirectory);
-                processDatFiles(playerDataDirectory);
+                if (oldFiles) {
+                    Multicount.LOGGER.info("Updating data format");
+                    renameFilesInDirectory(playerDataDirectory);
+                    renameFilesInDirectory(advancementsDirectory);
+                    renameFilesInDirectory(statsDirectory);
+                    processDatFiles(playerDataDirectory);
+                } else {
+                    MakeMulticountFiles(playerDataDirectory);
+                    MakeMulticountFiles(advancementsDirectory);
+                    MakeMulticountFiles(statsDirectory);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void checkSingleplayerDataFormat(File directory) {
+        // Get data directories
+        File playerDataDirectory = new File(directory, String.valueOf(WorldSavePath.PLAYERDATA));
+        File advancementsDirectory = new File(directory, String.valueOf(WorldSavePath.ADVANCEMENTS));
+        File statsDirectory = new File(directory, String.valueOf(WorldSavePath.STATS));
+        File dataDirectory = new File(directory, String.valueOf(WorldSavePath.LEVEL_DAT));
+        File primaryPlayerData = new File(playerDataDirectory, MulticountClient.accountHandler.uuid + ".dat");
+
+        // Check if multicount.dat does not exist in the data directory
+        boolean multicountDatNotExists = !new File(directory, "data/multicount.dat").exists();
+
+        // Update files to new format
+        if (multicountDatNotExists) {
+            try {
+                if (!primaryPlayerData.exists()) {
+                    NbtCompound data = NbtIo.readCompressed(dataDirectory);
+                    NbtCompound playerData = data.getCompound("Data").getCompound("Player");
+                    if (playerData != null) {
+                        NbtIo.writeCompressed(playerData, primaryPlayerData);
+                    }
+                }
+
+                MakeMulticountFiles(playerDataDirectory);
+                MakeMulticountFiles(advancementsDirectory);
+                MakeMulticountFiles(statsDirectory);
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private static void MakeMulticountFiles(File directory) throws IOException {
+        if (directory.exists() && directory.isDirectory()) {
+            File[] files = directory.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    String originalName = file.getName();
+                    String newName = originalName + "1";
+                    File newFile = new File(directory, newName);
+                    Files.copy(file.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                }
             }
         }
     }
