@@ -68,6 +68,7 @@ public abstract class PlayerManagerMixin implements PlayerManagerAdditions {
 				Files.copy(newAccountFile.toPath(), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			} else {
 				// If new account file doesn't exist, make the original file also not exist
+				Files.copy(file.toPath(), new File(file.getPath() + "_old").toPath(), StandardCopyOption.REPLACE_EXISTING);
 				Files.deleteIfExists(file.toPath());
 			}
 		} catch (IOException e) {

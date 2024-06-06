@@ -1,6 +1,7 @@
 package net.dialingspoon.multicount.util;
 
 import net.dialingspoon.multicount.Multicount;
+import net.dialingspoon.multicount.server.util.Updater;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.NbtTagSizeTracker;
@@ -19,6 +20,8 @@ public class SingleplayerAccountHandler {
     public String uuid;
 
     public NbtCompound getAccount(File worldFile) {
+        // Make files multicount compatible
+        Updater.checkSingleplayerDataFormat(worldFile);
         // Copy account advancements to main
         File advancementsFile = new File(Paths.get(worldFile.getAbsolutePath(), WorldSavePath.ADVANCEMENTS.getRelativePath()).toFile(), uuid + ".json");
         get(advancementsFile);
@@ -35,6 +38,7 @@ public class SingleplayerAccountHandler {
             if (playerDat.exists()) {
                 playerData = NbtIo.readCompressed(playerDat.toPath(), NbtTagSizeTracker.ofUnlimitedBytes());
             } else if (mainPlayerDat.exists()) {
+                Files.copy(mainPlayerDat.toPath(), new File(mainPlayerDat.getPath() + "_old").toPath(), StandardCopyOption.REPLACE_EXISTING);
                 mainPlayerDat.delete();
             }
         } catch (IOException e) {
