@@ -20,7 +20,7 @@ public class SingleplayerAccountHandler {
     public String uuid;
 
     public NbtCompound getAccount(File worldFile) {
-        // make files multicount compatible
+        // Make files multicount compatible
         Updater.checkSingleplayerDataFormat(worldFile);
         // Copy account advancements to main
         File advancementsFile = new File(Paths.get(worldFile.getAbsolutePath(), WorldSavePath.ADVANCEMENTS.getRelativePath()).toFile(), uuid + ".json");
@@ -38,7 +38,7 @@ public class SingleplayerAccountHandler {
             if (playerDat.exists()) {
                 playerData = NbtIo.readCompressed(playerDat.toPath(), NbtSizeTracker.ofUnlimitedBytes());
             } else if (mainPlayerDat.exists()) {
-                Files.copy(worldFile.toPath(), new File(worldFile.getPath() + "_old").toPath(), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(mainPlayerDat.toPath(), new File(mainPlayerDat.getPath() + "_old").toPath(), StandardCopyOption.REPLACE_EXISTING);
                 mainPlayerDat.delete();
             }
         } catch (IOException e) {

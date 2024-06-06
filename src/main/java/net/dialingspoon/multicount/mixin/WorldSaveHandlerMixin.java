@@ -1,7 +1,5 @@
 package net.dialingspoon.multicount.mixin;
 
-import com.mojang.datafixers.DataFixer;
-import net.minecraft.datafixer.DataFixTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.WorldSaveHandler;

@@ -67,12 +67,8 @@ public class Updater {
         if (multicountDatNotExists) {
             try {
                 if (!primaryPlayerData.exists()) {
-                    System.out.println(dataDirectory);
                     NbtCompound data = NbtIo.readCompressed(dataDirectory.toPath(), NbtSizeTracker.ofUnlimitedBytes());
-                    System.out.println(data);
                     NbtCompound playerData = data.getCompound("Data").getCompound("Player");
-                    System.out.println(playerData);
-                    System.out.println(primaryPlayerData);
                     if (playerData != null) {
                         NbtIo.writeCompressed(playerData, primaryPlayerData.toPath());
                     }
