@@ -7,13 +7,14 @@
     "PlayerMixin"
   ],
   "mixins": [
-    "PlayerManagerMixin"
+    "PlayerManagerMixin",
+    "WorldSaveHandlerMixin"
   ],
   "client": [
-    "TitleScreenMixin",
     "ClientPlayerMixin",
+    "IntegratedServerMixin",
     "LevelStorageMixin",
-    "IntegratedServerMixin"
+    "TitleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

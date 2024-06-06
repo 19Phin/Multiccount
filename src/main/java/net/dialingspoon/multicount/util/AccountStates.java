@@ -1,6 +1,7 @@
 package net.dialingspoon.multicount.util;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.world.PersistentState;
 
 import java.util.Map;
@@ -15,7 +16,7 @@ public class AccountStates extends PersistentState {
         super();
     }
 
-    public static AccountStates fromNbt(NbtCompound nbt) {
+    public static AccountStates fromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         AccountStates storage = new AccountStates();
         NbtCompound mapTag = nbt.getCompound("AccountStates");
 
@@ -29,7 +30,7 @@ public class AccountStates extends PersistentState {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         NbtCompound mapTag = new NbtCompound();
 
         for (Map.Entry<UUID, Integer> entry : uuidToIntMap.entrySet()) {

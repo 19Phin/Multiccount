@@ -46,7 +46,7 @@ public abstract class TitleScreenMixin extends Screen {
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Ljava/lang/String;III)I"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void renderNum(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, float f, float g, int i) {
+    private void renderNum(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci, float f, int i) {
         // Add account number to title screen
         String accountString = String.valueOf(MulticountClient.accountHandler.account);
         int textWidth = this.textRenderer.getWidth(accountString); // Calculate the width of the text
