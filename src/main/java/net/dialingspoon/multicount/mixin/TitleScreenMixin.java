@@ -24,13 +24,13 @@ public abstract class TitleScreenMixin extends Screen {
     }
     @Unique
     private static final ButtonTextures UP_BUTTON_TEXTURES = new ButtonTextures(
-        new Identifier(Multicount.MOD_ID, "widget/move_up"),
-            new Identifier(Multicount.MOD_ID, "widget/move_up_highlighted")
+        Identifier.of(Multicount.MOD_ID, "widget/move_up"),
+            Identifier.of(Multicount.MOD_ID, "widget/move_up_highlighted")
     );
     @Unique
     private static final ButtonTextures DOWN_BUTTON_TEXTURES = new ButtonTextures(
-        new Identifier(Multicount.MOD_ID, "widget/move_down"),
-            new Identifier(Multicount.MOD_ID, "widget/move_down_highlighted")
+        Identifier.of(Multicount.MOD_ID, "widget/move_down"),
+            Identifier.of(Multicount.MOD_ID, "widget/move_down_highlighted")
     );
 
 
