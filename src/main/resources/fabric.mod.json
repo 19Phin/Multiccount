@@ -9,7 +9,8 @@
     "DialingSpoon"
   ],
   "contact": {
-    "sources": "https://github.com/19Phin/Multiccount"
+    "sources": "https://github.com/19Phin/Multiccount",
+    "issues": "https://github.com/19Phin/Multiccount/issues"
   },
 
   "license": "MIT",

@@ -12,6 +12,7 @@ public class ConfigWriter {
 
     public static void writeToFile(Map<String, String> map) {
         File file = new File(FILE_PATH);
+        file.getParentFile().mkdirs();
         // Check if the file exists, if not, create it
         try {
             file.createNewFile();
