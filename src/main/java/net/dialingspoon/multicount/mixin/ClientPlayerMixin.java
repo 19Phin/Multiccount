@@ -43,7 +43,11 @@ public abstract class ClientPlayerMixin extends PlayerEntity implements PlayerAd
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-    private void readCustomDataFromNbt(NbtCompound nbt,CallbackInfo info) {account = nbt.getInt("account");}
+    private void readCustomDataFromNbt(NbtCompound nbt,CallbackInfo info) {
+        if (nbt.contains("account")) {
+            account = nbt.getInt("account");
+        }
+    }
 
     @Inject(method = "copyFrom", at = @At("TAIL"))
     public void copyFrom(ServerPlayerEntity oldPlayer, boolean alive,CallbackInfo info) {account = ((PlayerAdditions)oldPlayer).getAccount();}
