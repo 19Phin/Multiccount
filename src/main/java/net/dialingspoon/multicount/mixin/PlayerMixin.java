@@ -44,7 +44,7 @@ public abstract class PlayerMixin extends PlayerEntity implements PlayerAddition
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     private void readCustomDataFromNbt(NbtCompound nbt,CallbackInfo info) {
         if (nbt.contains("account")) {
-            account = nbt.getInt("account");
+            account = nbt.getInt("account").orElse(1);
         }
     }
 

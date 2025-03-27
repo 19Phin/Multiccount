@@ -1,9 +1,10 @@
 package net.dialingspoon.multicount.util;
 
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.RegistryWrapper;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.PersistentState;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,39 +12,38 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AccountStates extends PersistentState {
     private final ConcurrentHashMap<UUID, Integer> uuidToIntMap = new ConcurrentHashMap<>();
 
-    // Create persistent state multicount.dat
-    public AccountStates() {
-        super();
-    }
-
-    public static AccountStates fromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        AccountStates storage = new AccountStates();
-        NbtCompound mapTag = nbt.getCompound("AccountStates");
-
-        for (String key : mapTag.getKeys()) {
-            UUID uuid = UUID.fromString(key);
-            int value = mapTag.getInt(key);
-            storage.uuidToIntMap.put(uuid, value);
+    private Map<String, Integer> toStringIntMap() {
+        Map<String, Integer> map = new HashMap<>();
+        for (Map.Entry<UUID, Integer> e : uuidToIntMap.entrySet()) {
+            map.put(e.getKey().toString(), e.getValue());
         }
-
-        return storage;
+        return map;
     }
 
-    @Override
-    public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        NbtCompound mapTag = new NbtCompound();
-
-        for (Map.Entry<UUID, Integer> entry : uuidToIntMap.entrySet()) {
-            mapTag.putInt(entry.getKey().toString(), entry.getValue());
+    private void fromStringIntMap(Map<String, Integer> map) {
+        uuidToIntMap.clear();
+        for (Map.Entry<String, Integer> e : map.entrySet()) {
+            UUID id = UUID.fromString(e.getKey());
+            uuidToIntMap.put(id, e.getValue());
         }
-
-        nbt.put("AccountStates", mapTag);
-
-        return nbt;
     }
+
+    public static final Codec<AccountStates> CODEC = RecordCodecBuilder.create(instance ->
+            instance.group(
+                            Codec.unboundedMap(Codec.STRING, Codec.INT)
+                                    .fieldOf("AccountStates")
+                                    .forGetter(AccountStates::toStringIntMap)
+                    )
+                    .apply(instance, map -> {
+                        AccountStates state = new AccountStates();
+                        state.fromStringIntMap(map);
+                        return state;
+                    })
+    );
+
 
     // Getters and setters
-    public Integer getValue(UUID uuid) {
+    public int getValue(UUID uuid) {
         return uuidToIntMap.getOrDefault(uuid, 1);
     }
 
@@ -51,7 +51,7 @@ public class AccountStates extends PersistentState {
         uuidToIntMap.put(uuid, value);
     }
     @Override
-    public boolean isDirty(){
+    public boolean isDirty() {
         return true;
     }
 }

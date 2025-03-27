@@ -21,7 +21,7 @@ public abstract class LevelStorageMixin {
         NbtCompound fileNbt = NbtIo.readCompressed(path, NbtSizeTracker.ofUnlimitedBytes());
         NbtCompound playerData = MulticountClient.accountHandler.getAccount(path.getParent().toFile());
 
-        NbtCompound dataCompound = fileNbt.getCompound("Data");
+        NbtCompound dataCompound = fileNbt.getCompound("Data").orElseThrow();
         if (playerData != null) {
             dataCompound.put("Player", playerData);
         } else {

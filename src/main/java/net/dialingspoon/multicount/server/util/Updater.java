@@ -68,7 +68,7 @@ public class Updater {
             try {
                 if (!primaryPlayerData.exists()) {
                     NbtCompound data = NbtIo.readCompressed(dataDirectory.toPath(), NbtSizeTracker.ofUnlimitedBytes());
-                    NbtCompound playerData = data.getCompound("Data").getCompound("Player");
+                    NbtCompound playerData = data.getCompound("Data").orElse(new NbtCompound()).getCompound("Player").orElse(null);
                     if (playerData != null) {
                         NbtIo.writeCompressed(playerData, primaryPlayerData.toPath());
                     }
@@ -141,7 +141,7 @@ public class Updater {
             NbtCompound compoundTag = NbtIo.readCompressed(datFile.toPath(), NbtSizeTracker.ofUnlimitedBytes());
             // Check if the "account" tag exists
             if (compoundTag.contains("account")) {
-                return compoundTag.getInt("account");
+                return compoundTag.getInt("account").get();
             } else {
                 Multicount.LOGGER.info("Warning: 'account' tag not found in NBT data");
                 return 1; // Default value
