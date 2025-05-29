@@ -8,13 +8,13 @@ import net.minecraft.client.MinecraftClient;
 import java.util.UUID;
 
 public class MulticountClient implements ClientModInitializer {
-	public static SingleplayerAccountHandler accountHandler = new SingleplayerAccountHandler();
+	public static SingleplayerAccountHandler accountHandler;
 
 	@Override
 	public void onInitializeClient() {
 
 		// Get the player's GameProfile
-		accountHandler.uuid = MinecraftClient.getInstance().getSession().getUuid();
+		accountHandler = new SingleplayerAccountHandler(MinecraftClient.getInstance().getSession().getUuid());
 
 		// Copy account data to save file on world close
 		ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
