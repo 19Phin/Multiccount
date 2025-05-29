@@ -16,7 +16,25 @@ import java.nio.file.StandardCopyOption;
 public class SingleplayerAccountHandler {
 
     public int account = 1;
-    public String uuid;
+    public final String uuid;
+
+    public SingleplayerAccountHandler(String uuid) {
+        this.uuid = fixUuid(uuid);
+    }
+
+    public static String fixUuid(String input) {
+        if (input.length() == 32) {
+            StringBuilder sb = new StringBuilder(36);
+            sb.append(input, 0, 8).append('-')
+                    .append(input, 8, 12).append('-')
+                    .append(input, 12, 16).append('-')
+                    .append(input, 16, 20).append('-')
+                    .append(input, 20, 32);
+            return sb.toString();
+        } else {
+            return input;
+        }
+    }
 
     public NbtCompound getAccount(File worldFile) {
         // Make files multicount compatible
