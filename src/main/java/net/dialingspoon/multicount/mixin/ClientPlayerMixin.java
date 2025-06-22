@@ -4,9 +4,9 @@ import com.mojang.authlib.GameProfile;
 import net.dialingspoon.multicount.Multicount;
 import net.dialingspoon.multicount.server.interfaces.PlayerAdditions;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -19,8 +19,8 @@ public abstract class ClientPlayerMixin extends PlayerEntity implements PlayerAd
     @Unique
     public int account;
 
-    public ClientPlayerMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
-        super(world, pos, yaw, gameProfile);
+    public ClientPlayerMixin(World world, GameProfile gameProfile) {
+        super(world, gameProfile);
     }
 
     @Override
@@ -34,17 +34,15 @@ public abstract class ClientPlayerMixin extends PlayerEntity implements PlayerAd
     }
 
     // Add nbt tag
-    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-    private void writeCustomDataToNbt(NbtCompound nbt, CallbackInfo info) {
+    @Inject(method = "writeCustomData", at = @At("TAIL"))
+    private void writeCustomDataToNbt(WriteView view, CallbackInfo ci) {
         account = Multicount.accountStates.getValue(uuid);
-        nbt.putInt("account", account);
+        view.putInt("account", account);
     }
 
-    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-    private void readCustomDataFromNbt(NbtCompound nbt,CallbackInfo info) {
-        if (nbt.contains("account")) {
-            account = nbt.getInt("account").orElse(1);
-        }
+    @Inject(method = "readCustomData", at = @At("TAIL"))
+    private void readCustomDataFromNbt(ReadView view, CallbackInfo ci) {
+        view.getOptionalInt("account").ifPresent(integer -> account = integer);
     }
 
     @Inject(method = "copyFrom", at = @At("TAIL"))
