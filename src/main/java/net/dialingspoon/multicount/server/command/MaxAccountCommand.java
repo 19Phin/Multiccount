@@ -1,11 +1,11 @@
 package net.dialingspoon.multicount.server.command;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.dialingspoon.multicount.server.MulticountServer;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.GameProfileArgumentType;
+import net.minecraft.server.PlayerConfigEntry;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -37,23 +37,23 @@ public class MaxAccountCommand {
         );
     }
 
-    private static int execute(ServerCommandSource source, int maxCount, @Nullable Collection<GameProfile> targets){
+    private static int execute(ServerCommandSource source, int maxCount, @Nullable Collection<PlayerConfigEntry> targets){
         Map<String, String> map = new HashMap<>();
         Text text;
         // If player is specfied
         if (targets != null) {
             // If 0 set player's value to default
             if (maxCount == 0) {
-                for (GameProfile target : targets) {
-                    map.put(String.valueOf(target.getId()), "default");
+                for (PlayerConfigEntry target : targets) {
+                    map.put(String.valueOf(target.id()), "default");
                 }
                 text = Text.literal("Set " + targets.size() + " player's max accounts to default");
             } else {
                 // Else set to new value
                 String name = null;
-                for (GameProfile target : targets) {
-                    map.put(String.valueOf(target.getId()), String.valueOf(maxCount));
-                    name = target.getName();
+                for (PlayerConfigEntry target : targets) {
+                    map.put(String.valueOf(target.id()), String.valueOf(maxCount));
+                    name = target.name();
                 }
                 if (targets.size() == 1) {
                     text = Text.literal("Set " + name + "'s max accounts to " + maxCount);

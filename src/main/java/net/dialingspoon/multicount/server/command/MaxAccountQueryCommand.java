@@ -1,10 +1,10 @@
 package net.dialingspoon.multicount.server.command;
 
-import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import net.dialingspoon.multicount.server.MulticountServer;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.GameProfileArgumentType;
+import net.minecraft.server.PlayerConfigEntry;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
@@ -26,7 +26,7 @@ public class MaxAccountQueryCommand {
         );
     }
 
-    private static int execute(ServerCommandSource source, @Nullable Collection<GameProfile> targets){
+    private static int execute(ServerCommandSource source, @Nullable Collection<PlayerConfigEntry> targets){
         Text text;
         // If player is specfied
         if (targets == null) {
@@ -35,10 +35,10 @@ public class MaxAccountQueryCommand {
         } else {
             // Get each player's account
             StringBuilder accounts = new StringBuilder();
-            for (GameProfile target : targets) {
-                String targetmax = MulticountServer.configs.configsList.get(String.valueOf(target.getId()));
-                if (targetmax.equals("default")) accounts.append(target.getName() + " is allowed the default maximum accounts\n");
-                else accounts.append(target.getName() + " is allowed " + targetmax + " accounts\n");
+            for (PlayerConfigEntry target : targets) {
+                String targetmax = MulticountServer.configs.configsList.get(String.valueOf(target.id()));
+                if (targetmax.equals("default")) accounts.append(target.name() + " is allowed the default maximum accounts\n");
+                else accounts.append(target.name() + " is allowed " + targetmax + " accounts\n");
             }
             accounts.deleteCharAt(accounts.length() - 1);
             text = Text.literal(accounts.toString());
