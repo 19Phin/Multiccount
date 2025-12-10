@@ -2,39 +2,32 @@
   "schemaVersion": 1,
   "id": "multicount",
   "version": "${version}",
-
   "name": "Multicount",
   "description": "a server-side mod that allows players to create and switch between multiple saves",
   "authors": [
-    "DialingSpoon"
+    "DialingSpoon527"
   ],
   "contact": {
-    "sources": "https://github.com/19Phin/Multiccount",
-    "issues": "https://github.com/19Phin/Multiccount/issues"
+    "sources": "https://github.com/DialingSpoon527/Multicount",
+    "issues": "https://github.com/DialingSpoon527/Multicount/issues"
   },
-
   "license": "MIT",
-  "icon": "assets/multicount/icon.png",
-
+  "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
-    "server": [
-      "net.dialingspoon.multicount.server.MulticountServer"
-    ],
     "main": [
-      "net.dialingspoon.multicount.Multicount"
+      "net.dialingspoon.multicount.fabric.MulticountFabric"
     ],
     "client": [
-      "net.dialingspoon.multicount.MulticountClient"
+      "net.dialingspoon.multicount.fabric.MulticountFabricClient"
     ]
   },
   "mixins": [
     "multicount.mixins.json"
   ],
-
   "depends": {
     "fabricloader": ">=0.14.9",
-    "minecraft": ">1.21.8",
+    "minecraft": ">1.21.10 <26.1",
     "java": ">=21",
     "fabric-api": "*"
   },

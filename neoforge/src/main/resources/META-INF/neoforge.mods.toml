@@ -1,0 +1,31 @@
+modLoader = "javafml"
+loaderVersion = "[6,)"
+issueTrackerURL = "https://github.com/DialingSpoon527/Multicount/issues"
+license = "MIT"
+
+[[mods]]
+modId = "multicount"
+version = "${version}"
+displayName = "Multicount"
+authors = "DialingSpoon527"
+description = '''
+Adds variants to the creaking based on the wood used to spawn it.
+'''
+logoFile = "icon.png"
+
+[[mixins]]
+config = "multicount.mixins.json"
+
+[[dependencies.multicount]]
+modId = "neoforge"
+type = "required"
+versionRange = "(21.9,26.1)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.multicount]]
+modId = "minecraft"
+type = "required"
+versionRange = "(1.21.9,26.1)"
+ordering = "NONE"
+side = "BOTH"
