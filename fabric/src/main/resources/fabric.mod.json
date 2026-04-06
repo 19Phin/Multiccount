@@ -20,6 +20,9 @@
     ],
     "client": [
       "net.dialingspoon.multicount.fabric.MulticountFabricClient"
+    ],
+    "server": [
+      "net.dialingspoon.multicount.fabric.MulticountFabricServer"
     ]
   },
   "mixins": [
@@ -27,7 +30,7 @@
   ],
   "depends": {
     "fabricloader": ">=0.14.9",
-    "minecraft": ">1.21.10 <26.1",
+    "minecraft": ">1.21.11",
     "java": ">=21",
     "fabric-api": "*"
   },

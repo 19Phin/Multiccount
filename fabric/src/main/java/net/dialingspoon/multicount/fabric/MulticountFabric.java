@@ -17,7 +17,7 @@ public class MulticountFabric implements ModInitializer {
 		ServerLifecycleEvents.SERVER_STARTED.addPhaseOrdering(priorityPhase, Event.DEFAULT_PHASE);
 		ServerLifecycleEvents.SERVER_STARTED.register(priorityPhase, server ->
 				Multicount.accountStates = server.getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(
-						new SavedDataType<>(Multicount.MOD_ID, AccountStates::new, AccountStates.CODEC, DataFixTypes.LEVEL)
+						new SavedDataType<>(Identifier.fromNamespaceAndPath(Multicount.MOD_ID, "playerdata"), AccountStates::new, AccountStates.CODEC, DataFixTypes.LEVEL)
 				));
 	}
 }

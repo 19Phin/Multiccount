@@ -2,7 +2,7 @@ package net.dialingspoon.multicount.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.dialingspoon.multicount.Multicount;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.Screen;
@@ -43,12 +43,12 @@ public abstract class TitleScreenMixin extends Screen {
         this.addRenderableWidget(new ImageButton(this.width / 2 - 117, l-12, 11, 7, UP_BUTTON_TEXTURES, (button) -> Multicount.accountHandler.account ++, Component.literal("account up")));
     }
 
-    @Inject(method = "render", at = @At(value = "TAIL"))
-    private void renderNum(GuiGraphics context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci, @Local(ordinal = 1) float f) {
+    @Inject(method = "extractRenderState", at = @At(value = "TAIL"))
+    private void renderNum(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci, @Local(ordinal = 1) float f) {
         String accountString = String.valueOf(Multicount.accountHandler.account);
         int textWidth = this.font.width(accountString);
         int xPos = (this.width - textWidth) / 2;
-        context.drawString(this.font, accountString, xPos - 111, this.height / 4 + 78, ARGB.color(f, -1));
+        graphics.text(this.font, accountString, xPos - 111, this.height / 4 + 78, ARGB.color(f, -1));
     }
 
 }

@@ -30,6 +30,9 @@ public abstract class PlayerMixin extends Player implements PlayerAdditions {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void onInit(CallbackInfo info) {
+        if (Multicount.configs == null) {
+            Multicount.configs = new net.dialingspoon.multicount.server.config.ModConfigs();
+        }
         if (!Multicount.configs.configsList.containsKey(stringUUID))  Multicount.configs.setValue(stringUUID, "default");
         account = Multicount.accountStates.getValue(uuid);
     }

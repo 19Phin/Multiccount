@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 public class Updater {
     public static void checkAndUpdateDataFormat(MinecraftServer server) {
+        File rootDirectory = server.getWorldPath(LevelResource.ROOT).toFile();
         File playerDataDirectory = server.getWorldPath(LevelResource.PLAYER_DATA_DIR).toFile();
         File advancementsDirectory = server.getWorldPath(LevelResource.PLAYER_ADVANCEMENTS_DIR).toFile();
         File statsDirectory = server.getWorldPath(LevelResource.PLAYER_STATS_DIR).toFile();
@@ -26,9 +27,7 @@ public class Updater {
         File[] dat0Files = playerDataDirectory.listFiles((dir, name) -> name.endsWith(".dat0"));
         boolean oldFiles = dat0Files != null && dat0Files.length > 0;
 
-        boolean multicountDatNotExists = !new File(server.getWorldPath(LevelResource.ROOT).toFile(), "data/multicount.dat").exists();
-
-        if (multicountDatNotExists) {
+        if (!moveOldPlayerDataMarker(rootDirectory)) {
             try {
                 if (oldFiles) {
                     Multicount.LOGGER.info("Updating data format");
@@ -51,29 +50,39 @@ public class Updater {
         File playerDataDirectory = new File(directory, String.valueOf(LevelResource.PLAYER_DATA_DIR));
         File advancementsDirectory = new File(directory, String.valueOf(LevelResource.PLAYER_ADVANCEMENTS_DIR));
         File statsDirectory = new File(directory, String.valueOf(LevelResource.PLAYER_STATS_DIR));
-        File dataDirectory = new File(directory, String.valueOf(LevelResource.LEVEL_DATA_FILE));
-        File primaryPlayerData = new File(playerDataDirectory, Multicount.accountHandler.uuid + ".dat");
 
-        boolean multicountDatNotExists = !new File(directory, "data/multicount.dat").exists();
-
-        if (multicountDatNotExists) {
+        if (!moveOldPlayerDataMarker(directory)) {
             try {
-                if (!primaryPlayerData.exists()) {
-                    CompoundTag data = NbtIo.readCompressed(dataDirectory.toPath(), NbtAccounter.unlimitedHeap());
-                    CompoundTag playerData = data.getCompound("Data").orElse(new CompoundTag()).getCompound("Player").orElse(null);
-                    if (playerData != null) {
-                        NbtIo.writeCompressed(playerData, primaryPlayerData.toPath());
-                    }
-                }
-
                 MakeMulticountFiles(playerDataDirectory);
                 MakeMulticountFiles(advancementsDirectory);
                 MakeMulticountFiles(statsDirectory);
-
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private static File getOldPlayerDataMarker(File directory) {
+        return new File(directory, "data/multicount.dat");
+    }
+
+    private static File getNewPlayerDataMarker(File directory) {
+        return new File(directory, "dimensions/minecraft/overworld/data/multicount/playerdata.dat");
+    }
+
+    private static boolean moveOldPlayerDataMarker(File directory) {
+        File oldFile = getOldPlayerDataMarker(directory);
+        File newFile = getNewPlayerDataMarker(directory);
+
+        if (oldFile.exists() && !newFile.exists()) {
+            newFile.getParentFile().mkdirs();
+            try {
+                Files.move(oldFile.toPath(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return oldFile.exists() || newFile.exists();
     }
 
     private static void MakeMulticountFiles(File directory) throws IOException {

@@ -9,6 +9,7 @@ import net.dialingspoon.multicount.server.util.Updater;
 import net.dialingspoon.multicount.util.AccountStates;
 import net.dialingspoon.multicount.util.SingleplayerAccountHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedDataType;
@@ -30,7 +31,7 @@ public class NeoForgeEvents {
         @SubscribeEvent
         public static void onServerStarted(ServerStartedEvent event) {
             Multicount.accountStates = event.getServer().getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(
-                    new SavedDataType<>(Multicount.MOD_ID, AccountStates::new, AccountStates.CODEC, DataFixTypes.LEVEL)
+                    new SavedDataType<>(Identifier.fromNamespaceAndPath(Multicount.MOD_ID, "playerdata"), AccountStates::new, AccountStates.CODEC, DataFixTypes.LEVEL)
             );
         }
     }

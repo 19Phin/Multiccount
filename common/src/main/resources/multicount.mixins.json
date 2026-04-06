@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "net.dialingspoon.multicount.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_25",
   "server": [
     "PlayerMixin"
   ],
@@ -13,7 +13,7 @@
   "client": [
     "ClientPlayerMixin",
     "IntegratedServerMixin",
-    "LevelStorageMixin",
+    "SingleplayerPlayerListMixin",
     "TitleScreenMixin"
   ],
   "injectors": {

@@ -19,17 +19,22 @@ public class SingleplayerAccountHandler {
     public int account = 1;
     public String uuid;
 
-    public CompoundTag getAccount(File worldFile) {
+    public CompoundTag getAccount(File worldFile, String baseUuid) {
         Updater.checkSingleplayerDataFormat(worldFile);
 
-        File advancementsFile = new File(Paths.get(worldFile.getAbsolutePath(), LevelResource.PLAYER_ADVANCEMENTS_DIR.getId()).toFile(), uuid + ".json");
+        File advancementsFile = new File(Paths.get(worldFile.getAbsolutePath(), LevelResource.PLAYER_ADVANCEMENTS_DIR.id()).toFile(), baseUuid + ".json");
         get(advancementsFile);
-        File statsFile = new File(Paths.get(worldFile.getAbsolutePath(), LevelResource.PLAYER_STATS_DIR.getId()).toFile(), uuid + ".json");
+        File statsFile = new File(Paths.get(worldFile.getAbsolutePath(), LevelResource.PLAYER_STATS_DIR.id()).toFile(), baseUuid + ".json");
         get(statsFile);
 
-        File mainPlayerDat = new File(Paths.get(worldFile.getAbsolutePath(), LevelResource.PLAYER_DATA_DIR.getId()).toFile(), uuid + ".dat");
-        File playerDat = new File(Paths.get(worldFile.getAbsolutePath(), LevelResource.PLAYER_DATA_DIR.getId()).toFile(), uuid + ".dat" + account);
+        File playerDataPath = Paths.get(worldFile.getAbsolutePath(), LevelResource.PLAYER_DATA_DIR.id()).toFile();
+        File mainPlayerDat = new File(playerDataPath, baseUuid + ".dat");
+        File playerDat = new File(playerDataPath, baseUuid + ".dat" + account);
 
+        return loadAccountData(mainPlayerDat, playerDat);
+    }
+
+    private CompoundTag loadAccountData(File mainPlayerDat, File playerDat) {
         CompoundTag playerData = null;
         try {
             if (playerDat.exists()) {

@@ -10,7 +10,7 @@ import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
-public class MulticountServer implements DedicatedServerModInitializer {
+public class MulticountFabricServer implements DedicatedServerModInitializer {
 	@Override
 	public void onInitializeServer() {
 		Multicount.configs = new ModConfigs();
