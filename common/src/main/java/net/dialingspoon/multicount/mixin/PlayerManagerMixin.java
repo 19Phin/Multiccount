@@ -18,45 +18,45 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Mixin(PlayerList.class)
 public abstract class PlayerManagerMixin implements PlayerManagerAdditions {
 
 	@Shadow @Final private MinecraftServer server;
 	@Unique
-	int oldAccount = 0;
-	@Unique
-	int newAccount = 0;
+	private final Map<UUID, int[]> pendingAccountSwaps = new ConcurrentHashMap<>();
 
 	@Override
-	public void setAccount(int current, int to) {
-		oldAccount = current;
-		newAccount = to;
+	public void setAccount(UUID playerUuid, int current, int to) {
+		pendingAccountSwaps.put(playerUuid, new int[]{current, to});
 	}
 
 	@Inject(method = "save", at = @At("TAIL"))
 	private void changePlayerData(ServerPlayer player, CallbackInfo info) {
-		if (newAccount != 0) {
+		int[] accountSwap = pendingAccountSwaps.remove(player.getUUID());
+		if (accountSwap != null) {
+			int oldAccount = accountSwap[0];
+			int newAccount = accountSwap[1];
 			Multicount.accountStates.setValue(player.getUUID(), newAccount);
 
 			File playerData = new File(server.getWorldPath(LevelResource.PLAYER_DATA_DIR).toFile(), player.getStringUUID() + ".dat");
-			rotateAccounts(playerData);
+			rotateAccounts(playerData, oldAccount, newAccount);
 			File advancements = new File(server.getWorldPath(LevelResource.PLAYER_ADVANCEMENTS_DIR).toFile(), player.getStringUUID() + ".json");
-			rotateAccounts(advancements);
+			rotateAccounts(advancements, oldAccount, newAccount);
 			File stats = new File(server.getWorldPath(LevelResource.PLAYER_STATS_DIR).toFile(), player.getStringUUID() + ".json");
-			rotateAccounts(stats);
-
-			newAccount = 0;
-			oldAccount = 0;
+			rotateAccounts(stats, oldAccount, newAccount);
 		}
 	}
 
 	@Unique
-	private void rotateAccounts(File file){
+	private void rotateAccounts(File file, int oldAccount, int newAccount){
 
 		try {
-			File oldAccountFile = new File(file.getPath() + this.oldAccount);
-			File newAccountFile = new File(file.getPath() + this.newAccount);
+			File oldAccountFile = new File(file.getPath() + oldAccount);
+			File newAccountFile = new File(file.getPath() + newAccount);
 
 			Files.copy(file.toPath(), oldAccountFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 

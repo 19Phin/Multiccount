@@ -36,7 +36,8 @@ public class AccountCommand {
                 if (((PlayerAdditions) getplayer).getAccount() == i) {
                     throw new SimpleCommandExceptionType(Component.literal("That is the current account!")).create();
                 } else {
-                    ((PlayerManagerAdditions) source.getServer().getPlayerList()).setAccount(((PlayerAdditions) getplayer).getAccount(), (i));
+                    ((PlayerManagerAdditions) source.getServer().getPlayerList())
+                            .setAccount(getplayer.getUUID(), ((PlayerAdditions) getplayer).getAccount(), i);
                     getplayer.connection.disconnect(Component.literal("Switching accounts, please re-log."));
                 }
             } else {
